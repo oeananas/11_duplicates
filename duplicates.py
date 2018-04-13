@@ -4,21 +4,21 @@ import collections
 
 
 def get_files_name_size_path(directory):
-    files_info_dic = collections.defaultdict(list)
-    for dirs_path, dirs, names in os.walk(directory):
-        for file_name in names:
+    files_name_size_path = collections.defaultdict(list)
+    for dirs_path, dirs, files_name in os.walk(directory):
+        for file_name in files_name:
             file_path = os.path.join(dirs_path, file_name)
             file_size = os.path.getsize(file_path)
             file_name_and_size = (file_name, file_size)
-            files_info_dic[file_name_and_size].append(dirs_path)
-    return files_info_dic
+            files_name_size_path[file_name_and_size].append(dirs_path)
+    return files_name_size_path
 
 
-def get_duplicates(file_info):
+def get_duplicates(files_name_size_path):
     duplicates = {}
-    for info, path in file_info.items():
-        if len(path) > 1:
-            duplicates[info[0]] = path
+    for (file_name, file_size), file_path in files_name_size_path.items():
+        if len(file_path) > 1:
+            duplicates[(file_name, file_size)] = file_path
     return duplicates
 
 
@@ -33,5 +33,11 @@ if __name__ == '__main__':
     if not duplicates:
         exit('no duplicates in such directory')
     print('duplicate files found:')
-    for file, path in duplicates.items():
-        print(file, path)
+    for (file_name, file_size), file_paths in duplicates.items():
+        print('file: {} , size: {} Bytes in folders:'.format(
+            file_name,
+            file_size
+        ))
+        for file_path in file_paths:
+            print(file_path)
+        print()
