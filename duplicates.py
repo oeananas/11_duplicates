@@ -22,6 +22,17 @@ def get_duplicates(files_name_size_path):
     return duplicates
 
 
+def pretty_print_duplicates(duplicates):
+    for (file_name, file_size), file_paths in duplicates.items():
+        print('file: {} , size: {} Bytes in folders:'.format(
+            file_name,
+            file_size
+        ))
+        for file_path in file_paths:
+            print(file_path)
+        print()
+
+
 if __name__ == '__main__':
     if len(sys.argv) == 1:
         exit('you did not enter the path to the directory as parameter')
@@ -32,12 +43,5 @@ if __name__ == '__main__':
     duplicates = get_duplicates(file_size_path)
     if not duplicates:
         exit('no duplicates in such directory')
-    print('duplicate files found:')
-    for (file_name, file_size), file_paths in duplicates.items():
-        print('file: {} , size: {} Bytes in folders:'.format(
-            file_name,
-            file_size
-        ))
-        for file_path in file_paths:
-            print(file_path)
-        print()
+    print('duplicate files found:\n')
+    pretty_print_duplicates(duplicates)
